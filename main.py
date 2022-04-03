@@ -1,6 +1,8 @@
 import datetime
 from flask import Flask, render_template, request
+import webview
 import os
+import multiprocessing
 import subprocess
 
 app = Flask(__name__)
@@ -55,5 +57,11 @@ def setWallpaper():
     #os.system(f'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin DISPLAY=:0 DESKTOP_SESSION=plasma DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus" /usr/bin/dwall -s {wallpaper}')
     os.system(f'notify-send "Linux Dynamic Wallpapers" "Set wallpaper to {wallpaper.upper()}" ')
 
-if __name__ == "__main__":
+def runServer():
     app.run(debug=True)
+
+if __name__ == "__main__":
+    p1 = multiprocessing.Process(target=runServer)
+    p1.start()
+    window = webview.create_window("Linux Dynamic Wallpapers","http://localhost:5000")
+    webview.start()

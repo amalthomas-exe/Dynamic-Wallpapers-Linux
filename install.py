@@ -31,7 +31,7 @@ def installBuildDependencies():
     print("\n\n")
     a = input("checkpoint 1")
     print(colored("Installing Build libraries. This may take some time.",color="green"))
-    subprocess.getoutput("sudo apt-get install x11-xserver-utils feh cron -y")
+    subprocess.getoutput("sudo apt-get install x11-xserver-utils python3-pyqt5 python3-pyqt5.qtwebengine python3-pyqt5.qtwebchannel libqt5webkit5-dev feh cron -y")
     b = input("checkpoint 2")
     print(colored("Installing files. This may take a while.",color="green"))
     if(os.path.exists("/usr/share/linuxDynamicWallpapers")):
