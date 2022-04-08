@@ -1,5 +1,5 @@
 import datetime
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 import webview
 import os
 import multiprocessing
@@ -7,6 +7,18 @@ import subprocess
 
 app = Flask(__name__)
 
+@app.context_processor
+def override_url_for():
+    return dict(url_for=dated_url_for)
+
+def dated_url_for(endpoint, **values):
+    if endpoint == 'static':
+        filename = values.get('filename', None)
+        if filename:
+            file_path = os.path.join(app.root_path,
+                                 endpoint, filename)
+            values['q'] = int(os.stat(file_path).st_mtime)
+    return url_for(endpoint, **values)
 def setDEWallpaper(de,style):
     if style in ["bitday","firewatch","gradient"]:
         type = ".png"
@@ -53,12 +65,12 @@ def setWallpaper():
     wallpaper = request.args.get("wallpaper").lower()
     print(wallpaper)
     DE = subprocess.getoutput("echo $DESKTOP_SESSION")
-    setDEWallpaper("plasma",wallpaper)
+    setDEWallpaper(DE,wallpaper)
     #os.system(f'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin DISPLAY=:0 DESKTOP_SESSION=plasma DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus" /usr/bin/dwall -s {wallpaper}')
     os.system(f'notify-send "Linux Dynamic Wallpapers" "Set wallpaper to {wallpaper.upper()}" ')
 
 def runServer():
-    app.run(debug=True)
+    app.run()
 
 if __name__ == "__main__":
     p1 = multiprocessing.Process(target=runServer)
