@@ -31,7 +31,8 @@ def installBuildDependencies():
     print("\n\n")
     a = input("checkpoint 1")
     print(colored("Installing Build libraries. This may take some time.",color="green"))
-    subprocess.getoutput("sudo apt-get install x11-xserver-utils python3-pyqt5 python3-pyqt5.qtwebengine python3-pyqt5.qtwebchannel libqt5webkit5-dev feh cron -y")
+    os.system("sudo apt-get install x11-xserver-utils python3-pyqt5 python3-pyqt5.qtwebengine python3-pyqt5.qtwebchannel libqt5webkit5-dev feh cron -y")
+    os.system("pip3 install pywebview")
     b = input("checkpoint 2")
     print(colored("Installing files. This may take a while.",color="green"))
     if(os.path.exists("/usr/share/linuxDynamicWallpapers")):
@@ -39,7 +40,7 @@ def installBuildDependencies():
         os.system("sudo mkdir -p /usr/share/linuxDynamicWallpapers")
     else:
         os.system("sudo mkdir -p /usr/share/linuxDynamicWallpapers")
-    os.system("sudo cp -r ./data /usr/share/linuxDynamicWallpapers")
+    #os.system("sudo cp -r ./data /usr/share/linuxDynamicWallpapers")
     os.system("sudo cp -r ./static /usr/share/linuxDynamicWallpapers")
     os.system("sudo cp -r ./templates /usr/share/linuxDynamicWallpapers")
     os.system("sudo cp -r ./images /usr/share/linuxDynamicWallpapers")

@@ -31,29 +31,29 @@ def setDEWallpaper(de,style):
 
     elif de in ["cinnamon","Cinnamon"]:
         print("Inside",de)
-        os.system(f"gsettings set org.cinnamon.desktop.background picture-uri \"file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}""{type}\"")
+        os.system(f"gsettings set org.cinnamon.desktop.background picture-uri \"file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}\"")
     
     elif de in ["Xfce Session","xfce session","XFCE","xfce","Xubuntu","xubuntu"]:
         print("Inside",de)
         SCREEN = subprocess.getoutput("echo $(xrandr --listactivemonitors | awk -F ' ' 'END {print $1}' | tr -d \:)")
         MONITOR = subprocess.getoutput("echo $(xrandr --listactivemonitors | awk -F ' ' 'END {print $2}' | tr -d \*+)")
-        os.system(f"xfconf-query --channel xfce4-desktop --property /backdrop/screen{SCREEN}/monitor{MONITOR}/workspace0/last-image --set usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}""{type}")
+        os.system(f"xfconf-query --channel xfce4-desktop --property /backdrop/screen{SCREEN}/monitor{MONITOR}/workspace0/last-image --set usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
     
     elif de in ["MATE","Mate","mate"]:
         print("Inside",de)
-        os.system(f"gsettings set org.mate.background picture-filename usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}""{type}")
+        os.system(f"gsettings set org.mate.background picture-filename usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
 
     elif de in ["LXDE","Lxde","lxde"]:
         print("Inside",de)
-        os.system("pcmanfm --set-wallpaper=\"usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}""{type}\"")
+        os.system("pcmanfm --set-wallpaper=\"usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}\"")
 
     elif de in ["PANTHEON","Pantheon","pantheon","GNOME","Gnome","gnome","Gnome-xorg","gnome-xorg","UBUNTU","Ubuntu","ubuntu","DEEPIN","Deepin","deepin","POP","Pop","pop"]:
         print("Inside",de)
-        os.system(f"gsettings set org.gnome.desktop.background picture-uri file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}""{type}")
+        os.system(f"gsettings set org.gnome.desktop.background picture-uri file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
     
     else:
         print("Inside",de)
-        os.system("feh --bg-fill usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}""{type}")
+        os.system("feh --bg-fill usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
 
 
 @app.route("/")
