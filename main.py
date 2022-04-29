@@ -72,8 +72,11 @@ def setWallpaper():
 def runServer():
     app.run()
 
+def onclose():
+    p1.kill()
 if __name__ == "__main__":
     p1 = multiprocessing.Process(target=runServer)
     p1.start()
     window = webview.create_window("Linux Dynamic Wallpapers","http://localhost:5000")
-    webview.start()
+    window.closing+=onclose
+    webview.start(http_server=True)
