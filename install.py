@@ -13,9 +13,9 @@ def installPreBuildDependencies():
     print("Installing dependencies.....\n\nThis may take a few moments.....")
     if(subprocess.getstatusoutput("pip3")[0]!=0):
         os.system("sudo apt install python3-pip -y")
-    if(subprocess.getstatusoutput("python3 -m pyfiglet")[0] not in [0,1]):
+    if(subprocess.getstatusoutput("sudo python3 -m pyfiglet")[0] not in [0]):
         os.system("sudo pip3 install pyfiglet")
-    if(subprocess.getstatusoutput("python3 -m termcolor") not in [0,1]):
+    if(subprocess.getstatusoutput("sudo python3 -m termcolor") not in [0]):
         os.system("sudo pip3 install termcolor")
     os.system("clear")
     installBuildDependencies()
@@ -32,7 +32,7 @@ def installBuildDependencies():
     a = input("checkpoint 1")
     print(colored("Installing Build libraries. This may take some time.",color="green"))
     os.system("sudo apt-get install x11-xserver-utils python3-pyqt5 python3-pyqt5.qtwebengine python3-pyqt5.qtwebchannel libqt5webkit5-dev feh cron -y")
-    os.system("pip3 install pywebview")
+    os.system("pip3 install Flask pywebview")
     b = input("checkpoint 2")
     print(colored("Installing files. This may take a while.",color="green"))
     if(os.path.exists("/usr/share/linuxDynamicWallpapers")):
