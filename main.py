@@ -76,16 +76,16 @@ def index():
 @app.route("/setWallpaper")
 def setWallpaper():
     wallpaper = request.args.get("wallpaper").lower()
-    print(wallpaper)
     DE = subprocess.getoutput("echo $DESKTOP_SESSION")
     previousWallpaper = data["currentWallpaper"]
+    print(previousWallpaper)
     setDEWallpaper(DE,wallpaper)
     data["DE"] = DE
     data["currentWallpaper"] = wallpaper
     fw = open("/usr/share/linuxDynamicWallpapers/data/data.dat","wb")
     pickle.dump(data,fw)
     fw.close()
-    os.system(f'(crontab -u {subprocess.getoutput("whoami")} -l ; echo "* * * * * env PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin DISPLAY=:0 DESKTOP_SESSION=plasma DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus" setdwl {wallpaper}") | crontab -u {subprocess.getoutput("whoami")} -') #Sets a cronjob for the wallpaper to change every hour.
+    os.system(f'(crontab -u {subprocess.getoutput("whoami")} -l ; echo "* * * * * env PATH={subprocess.getoutput("echo $PATH")} DISPLAY={subprocess.getoutput("echo $DISPLAY")} DESKTOP_SESSION={subprocess.getoutput("echo $DESKTOP_SESSION")} DBUS_SESSION_BUS_ADDRESS="{subprocess.getoutput("echo $DBUS_SESSION_BUS_ADDRESS")}" setdwl {wallpaper}") | crontab -u {subprocess.getoutput("whoami")} -') #Sets a cronjob for the wallpaper to change every hour.
     os.system(f'crontab -u {subprocess.getoutput("whoami")} -l | grep -v "{previousWallpaper}"  | crontab -u {subprocess.getoutput("whoami")} -')
     os.system("/etc/init.d/cron reload")
     os.system(f'notify-send "Linux Dynamic Wallpapers" "Set wallpaper to {wallpaper.upper()}" ')
