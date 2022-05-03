@@ -85,7 +85,7 @@ def setWallpaper():
     fw = open("/usr/share/linuxDynamicWallpapers/data/data.dat","wb")
     pickle.dump(data,fw)
     fw.close()
-    os.system(f'(crontab -u {subprocess.getoutput("whoami")} -l ; echo "* * * * * env PATH={subprocess.getoutput("echo $PATH")} DISPLAY={subprocess.getoutput("echo $DISPLAY")} DESKTOP_SESSION={subprocess.getoutput("echo $DESKTOP_SESSION")} DBUS_SESSION_BUS_ADDRESS="{subprocess.getoutput("echo $DBUS_SESSION_BUS_ADDRESS")}" setdwl {wallpaper}") | crontab -u {subprocess.getoutput("whoami")} -') #Sets a cronjob for the wallpaper to change every hour.
+    os.system(f'(crontab -u {subprocess.getoutput("whoami")} -l ; echo "0 * * * * env PATH={subprocess.getoutput("echo $PATH")} DISPLAY={subprocess.getoutput("echo $DISPLAY")} DESKTOP_SESSION={subprocess.getoutput("echo $DESKTOP_SESSION")} DBUS_SESSION_BUS_ADDRESS="{subprocess.getoutput("echo $DBUS_SESSION_BUS_ADDRESS")}" setdwl {wallpaper}") | crontab -u {subprocess.getoutput("whoami")} -') #Sets a cronjob for the wallpaper to change every hour.
     os.system(f'crontab -u {subprocess.getoutput("whoami")} -l | grep -v "{previousWallpaper}"  | crontab -u {subprocess.getoutput("whoami")} -')
     os.system("/etc/init.d/cron reload")
     os.system(f'notify-send "Linux Dynamic Wallpapers" "Set wallpaper to {wallpaper.upper()}" ')

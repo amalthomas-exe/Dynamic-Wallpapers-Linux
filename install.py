@@ -29,11 +29,9 @@ def installBuildDependencies(): #install the build dependencies
     print("\n")
     print(colored("By Amal Thomas",color="red"))
     print("\n\n")
-    a = input("checkpoint 1")
     print(colored("Installing Build libraries. This may take some time.",color="green"))
     os.system("sudo apt-get install x11-xserver-utils python3-pyqt5 python3-pyqt5.qtwebengine python3-pyqt5.qtwebchannel libqt5webkit5-dev feh cron -y")
     os.system("pip3 install Flask pywebview argparse")
-    b = input("checkpoint 2")
     print(colored("Installing files. This may take a while.",color="green"))
     if(os.path.exists("/usr/share/linuxDynamicWallpapers")):
         os.system("sudo rm -rf /usr/share/linuxDynamicWallpapers")
