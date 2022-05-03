@@ -58,7 +58,7 @@ def setDEWallpaper(de,style):
 
     elif de in ["LXDE","Lxde","lxde"]: #Set Wallpaper for LXDE
         print("Inside",de)
-        os.system("pcmanfm --set-wallpaper=\"usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}\"")
+        os.system(f"pcmanfm --set-wallpaper=\"usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}\"")
 
     elif de in ["PANTHEON","Pantheon","pantheon","GNOME","Gnome","gnome","Gnome-xorg","gnome-xorg","UBUNTU","Ubuntu","ubuntu","DEEPIN","Deepin","deepin","POP","Pop","pop"]: #Set Wallpaper for Ubuntu, Pop, Pantheon DE
         print("Inside",de)
@@ -66,7 +66,7 @@ def setDEWallpaper(de,style):
     
     else:
         print("Inside",de)
-        os.system("feh --bg-fill usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
+        os.system(f"feh --bg-fill usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
 
 
 @app.route("/")
