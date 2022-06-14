@@ -60,10 +60,16 @@ def setDEWallpaper(de,style):
         print("Inside",de)
         os.system(f"pcmanfm --set-wallpaper=\"usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}\"")
 
-    elif de in ["PANTHEON","Pantheon","pantheon","GNOME","Gnome","gnome","Gnome-xorg","gnome-xorg","UBUNTU","Ubuntu","ubuntu","DEEPIN","Deepin","deepin","POP","Pop","pop"]: #Set Wallpaper for Ubuntu, Pop, Pantheon DE
+    elif de in ["PANTHEON","Pantheon","pantheon","GNOME","Gnome","gnome","Gnome-xorg","gnome-xorg","UBUNTU","Ubuntu","ubuntu","DEEPIN","Deepin","deepin"]: #Set Wallpaper for Ubuntu, Pop, Pantheon DE
         print("Inside",de)
         os.system(f"gsettings set org.gnome.desktop.background picture-uri file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
     
+    elif de in ["POP","Pop","pop"]:
+        print("Inside",de)
+        if subprocess.getoutput("gsettings get org.gnome.desktop.interface gtk-theme")=="'Pop-dark'":
+            os.system(f"gsettings set org.gnome.desktop.background picture-uri-dark file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
+        else:
+            os.system(f"gsettings set org.gnome.desktop.background picture-uri file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
     else:
         print("Inside",de)
         os.system(f"feh --bg-fill usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
