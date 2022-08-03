@@ -38,7 +38,7 @@ def setDEWallpaper(de,style):
     else:
         type = ".jpg"
 
-    if de in ["/usr/share/xsessions/plasma","NEON","neon","PLASMA","Plasma","plasma","KDE","Kde","kde"]: #Set Wallpaper for Plasma DE
+    if de in ["/usr/share/xsessions/plasma","NEON","plasmawayland","neon","PLASMA","Plasma","plasma","KDE","Kde","kde"]: #Set Wallpaper for Plasma DE
         print("Inside",de)
         os.system("qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript 'var allDesktops = desktops();print (allDesktops);for (i=0;i<allDesktops.length;i++) {d = allDesktops[i];d.wallpaperPlugin = \"org.kde.image\";d.currentConfigGroup = Array(\"Wallpaper\", \"org.kde.image\", \"General\");d.writeConfig(\"Image\", \"file:///usr/share/linuxDynamicWallpapers/images/"+style+"/"+str(datetime.datetime.now().hour)+type+"\")}'")
 
