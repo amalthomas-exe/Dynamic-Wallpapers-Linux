@@ -97,7 +97,7 @@ def setWallpaper():
     os.system(f'notify-send "Linux Dynamic Wallpapers" "Set wallpaper to {wallpaper.upper()}" ')
 
 def runServer():
-    app.run()
+    app.run(port=6969)
 
 def onclose():
     p1.kill()
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     if args.type == None: #For setting the Wallpaper using GUI
         p1 = multiprocessing.Process(target=runServer)
         p1.start()
-        window = webview.create_window("Linux Dynamic Wallpapers","http://localhost:5000")
+        window = webview.create_window("Linux Dynamic Wallpapers","http://localhost:6969")
         window.closing+=onclose
         webview.start(http_server=True)
     else:
