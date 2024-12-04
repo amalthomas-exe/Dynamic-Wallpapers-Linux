@@ -12,72 +12,131 @@ The program first reads for the required info stored in the ./data/data.dat bina
 """
 app = Flask(__name__)
 parser = argparse.ArgumentParser()
-parser.add_argument("--type",type=str,required=False)
+parser.add_argument("--type", type=str, required=False)
 args = parser.parse_args()
-fr = open(r"/usr/share/linuxDynamicWallpapers/data/data.dat","rb")
-data = pickle.load(fr)
-fr.close()
+with open(r"/usr/share/linuxDynamicWallpapers/data/data.dat", "rb") as fr:
+    data = pickle.load(fr)
+
 
 @app.context_processor
 def override_url_for():
     return dict(url_for=dated_url_for)
 
+
 def dated_url_for(endpoint, **values):
-    if endpoint == 'static':
-        filename = values.get('filename', None)
+    if endpoint == "static":
+        filename = values.get("filename", None)
         if filename:
-            file_path = os.path.join(app.root_path,
-                                 endpoint, filename)
-            values['q'] = int(os.stat(file_path).st_mtime)
+            file_path = os.path.join(app.root_path, endpoint, filename)
+            values["q"] = int(os.stat(file_path).st_mtime)
     return url_for(endpoint, **values)
 
 
-def setDEWallpaper(de,style):
-    if style in ["bitday","firewatch","gradient"]: #only these 3 types have .png file extension.
-        type = ".png"
+def setDEWallpaper(desktop_environment: str, style: str):
+    if style in [
+        "bitday",
+        "firewatch",
+        "gradient",
+    ]:  # only these 3 types have .png file extension.
+        file_extension = ".png"
     else:
-        type = ".jpg"
+        file_extension = ".jpg"
 
-    if de in ["/usr/share/xsessions/plasma","NEON","plasmawayland","neon","PLASMA","Plasma","plasma","KDE","Kde","kde"]: #Set Wallpaper for Plasma DE
-        print("Inside",de)
-        os.system("qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript 'var allDesktops = desktops();print (allDesktops);for (i=0;i<allDesktops.length;i++) {d = allDesktops[i];d.wallpaperPlugin = \"org.kde.image\";d.currentConfigGroup = Array(\"Wallpaper\", \"org.kde.image\", \"General\");d.writeConfig(\"Image\", \"file:///usr/share/linuxDynamicWallpapers/images/"+style+"/"+str(datetime.datetime.now().hour)+type+"\")}'")
+    if desktop_environment.lower() in [
+        "/usr/share/xsessions/plasma",
+        "plasmawayland",
+        "neon",
+        "plasma",
+        "kde",
+    ]:  # Set Wallpaper for Plasma DE
+        print("Inside", desktop_environment)
+        os.system(
+            'qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript \'var allDesktops = desktops();print (allDesktops);for (i=0;i<allDesktops.length;i++) {d = allDesktops[i];d.wallpaperPlugin = "org.kde.image";d.currentConfigGroup = Array("Wallpaper", "org.kde.image", "General");d.writeConfig("Image", "file:///usr/share/linuxDynamicWallpapers/images/'
+            + style
+            + "/"
+            + str(datetime.datetime.now().hour)
+            + file_extension
+            + "\")}'"
+        )
 
-    elif de in ["cinnamon","Cinnamon"]: # Set Wallpaper for Cinnamon DE
-        print("Inside",de)
-        os.system(f"gsettings set org.cinnamon.desktop.background picture-uri \"file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}\"")
-    
-    elif de in ["Xfce Session","xfce session","XFCE","xfce","Xubuntu","xubuntu"]: #Set Wallpaper for XFCE DE
-        print("Inside",de)
-        SCREEN = subprocess.getoutput("echo $(xrandr --listactivemonitors | awk -F ' ' 'END {print $1}' | tr -d \:)")
-        MONITOR = subprocess.getoutput("echo $(xrandr --listactivemonitors | awk -F ' ' 'END {print $2}' | tr -d \*+)")
-        os.system(f"xfconf-query --channel xfce4-desktop --property /backdrop/screen{SCREEN}/monitor{MONITOR}/workspace0/last-image --set usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
-    
-    elif de in ["MATE","Mate","mate"]: #Set Wallpaper for Mate DE
-        print("Inside",de)
-        os.system(f"gsettings set org.mate.background picture-filename usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
+    elif desktop_environment.lower() == "cinnamon":  # Set Wallpaper for Cinnamon DE
+        print("Inside", desktop_environment)
+        os.system(
+            f'gsettings set org.cinnamon.desktop.background picture-uri "file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}'
+            + f'{file_extension}"'
+        )
 
-    elif de in ["LXDE","Lxde","lxde"]: #Set Wallpaper for LXDE
-        print("Inside",de)
-        os.system(f"pcmanfm --set-wallpaper=\"usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}\"")
+    elif desktop_environment.lower() in [
+        "xfce session",
+        "xfce",
+        "xubuntu",
+    ]:  # Set Wallpaper for XFCE DE
+        print("Inside", desktop_environment)
+        SCREEN = subprocess.getoutput(
+            "echo $(xrandr --listactivemonitors | awk -F ' ' 'END {print $1}' | tr -d \:)"
+        )
+        MONITOR = subprocess.getoutput(
+            "echo $(xrandr --listactivemonitors | awk -F ' ' 'END {print $2}' | tr -d \*+)"
+        )
+        os.system(
+            f"xfconf-query --channel xfce4-desktop --property /backdrop/screen{SCREEN}/monitor{MONITOR}/workspace0/last-image --set usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"
+            + f"{file_extension}"
+        )
 
-    elif de in ["PANTHEON","Pantheon","pantheon","GNOME","Gnome","gnome","Gnome-xorg","gnome-xorg","UBUNTU","Ubuntu","ubuntu","DEEPIN","Deepin","deepin"]: #Set Wallpaper for Ubuntu, Pop, Pantheon DE
-        print("Inside",de)
-        os.system(f"gsettings set org.gnome.desktop.background picture-uri file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
-    
-    elif de in ["POP","Pop","pop"]:
-        print("Inside",de)
-        if subprocess.getoutput("gsettings get org.gnome.desktop.interface gtk-theme")=="'Pop-dark'":
-            os.system(f"gsettings set org.gnome.desktop.background picture-uri-dark file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
+    elif desktop_environment.lower() == "mate":  # Set Wallpaper for Mate DE
+        print("Inside", desktop_environment)
+        os.system(
+            f"gsettings set org.mate.background picture-filename usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"
+            + f"{file_extension}"
+        )
+
+    elif desktop_environment.lower() == "lxde":  # Set Wallpaper for LXDE
+        print("Inside", desktop_environment)
+        os.system(
+            f'pcmanfm --set-wallpaper="usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}'
+            + f'{file_extension}"'
+        )
+
+    elif desktop_environment.lower() in [
+        "pantheon",
+        "gnome",
+        "gnome-xorg",
+        "ubuntu",
+        "deepin",
+    ]:  # Set Wallpaper for Ubuntu, Pop, Pantheon DE
+        print("Inside", desktop_environment)
+        os.system(
+            f"gsettings set org.gnome.desktop.background picture-uri file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"
+            + f"{file_extension}"
+        )
+
+    elif desktop_environment.lower() == "pop":
+        print("Inside", desktop_environment)
+        if (
+            subprocess.getoutput("gsettings get org.gnome.desktop.interface gtk-theme")
+            == "'Pop-dark'"
+        ):
+            os.system(
+                f"gsettings set org.gnome.desktop.background picture-uri-dark file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"
+                + f"{file_extension}"
+            )
         else:
-            os.system(f"gsettings set org.gnome.desktop.background picture-uri file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
+            os.system(
+                f"gsettings set org.gnome.desktop.background picture-uri file:///usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"
+                + f"{file_extension}"
+            )
     else:
-        print("Inside",de)
-        os.system(f"feh --bg-fill usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"+f"{type}")
+        print("Inside", desktop_environment)
+        os.system(
+            f"feh --bg-fill usr/share/linuxDynamicWallpapers/images/{style}/{datetime.datetime.now().hour}"
+            + f"{file_extension}"
+        )
 
 
 @app.route("/")
 def index():
-    return render_template("index.html") #Display the Flask Frontend.
+    return render_template("index.html")  # Display the Flask Frontend.
+
 
 @app.route("/setWallpaper")
 def setWallpaper():
@@ -85,31 +144,43 @@ def setWallpaper():
     DE = subprocess.getoutput("echo $DESKTOP_SESSION")
     previousWallpaper = data["currentWallpaper"]
     print(previousWallpaper)
-    setDEWallpaper(DE,wallpaper)
+    setDEWallpaper(DE, wallpaper)
     data["DE"] = DE
     data["currentWallpaper"] = wallpaper
-    fw = open("/usr/share/linuxDynamicWallpapers/data/data.dat","wb")
-    pickle.dump(data,fw)
-    fw.close()
-    os.system(f'(crontab -u {subprocess.getoutput("whoami")} -l ; echo "0 * * * * env PATH={subprocess.getoutput("echo $PATH")} DISPLAY={subprocess.getoutput("echo $DISPLAY")} DESKTOP_SESSION={subprocess.getoutput("echo $DESKTOP_SESSION")} DBUS_SESSION_BUS_ADDRESS="{subprocess.getoutput("echo $DBUS_SESSION_BUS_ADDRESS")}" setdwl {wallpaper}") | crontab -u {subprocess.getoutput("whoami")} -') #Sets a cronjob for the wallpaper to change every hour.
-    os.system(f'crontab -u {subprocess.getoutput("whoami")} -l | grep -v "{previousWallpaper}"  | crontab -u {subprocess.getoutput("whoami")} -')
+    with open("/usr/share/linuxDynamicWallpapers/data/data.dat", "wb") as fw:
+        pickle.dump(data, fw)
+    os.system(
+        f'(crontab -u {subprocess.getoutput("whoami")} -l ; echo "0 * * * * env PATH={subprocess.getoutput("echo $PATH")} DISPLAY={subprocess.getoutput("echo $DISPLAY")} DESKTOP_SESSION={subprocess.getoutput("echo $DESKTOP_SESSION")} DBUS_SESSION_BUS_ADDRESS="{subprocess.getoutput("echo $DBUS_SESSION_BUS_ADDRESS")}" setdwl {wallpaper}") | crontab -u {subprocess.getoutput("whoami")} -'
+    )  # Sets a cronjob for the wallpaper to change every hour.
+    os.system(
+        f'crontab -u {subprocess.getoutput("whoami")} -l | grep -v "{previousWallpaper}"  | crontab -u {subprocess.getoutput("whoami")} -'
+    )
     os.system("/etc/init.d/cron reload")
-    os.system(f'notify-send "Linux Dynamic Wallpapers" "Set wallpaper to {wallpaper.upper()}" ')
+    os.system(
+        f'notify-send "Linux Dynamic Wallpapers" "Set wallpaper to {wallpaper.upper()}" '
+    )
+
 
 def runServer():
     app.run(port=6969)
 
+
 def onclose():
     p1.kill()
 
-if __name__ == "__main__": 
-    if args.type == None: #For setting the Wallpaper using GUI
+
+if __name__ == "__main__":
+    if args.type is None:  # For setting the Wallpaper using GUI
         p1 = multiprocessing.Process(target=runServer)
         p1.start()
-        window = webview.create_window("Linux Dynamic Wallpapers","http://localhost:6969")
-        window.closing+=onclose
+        window = webview.create_window(
+            "Linux Dynamic Wallpapers", "http://localhost:6969"
+        )
+        window.closing += onclose
         webview.start(http_server=True)
     else:
-        f = open("/usr/share/linuxDynamicWallpapers/data/data.dat","rb") #For changing the wallpaper every hour, managed by setdwl.sh
-        data = pickle.load(f)
-        setDEWallpaper(data["DE"],args.type)
+        with open(
+            "/usr/share/linuxDynamicWallpapers/data/data.dat", "rb"
+        ) as f:  # For changing the wallpaper every hour, managed by setdwl.sh
+            data = pickle.load(f)
+        setDEWallpaper(data["DE"], args.type)
